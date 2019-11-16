@@ -3,9 +3,7 @@ class ProjectsController < AuthenticatedController
 
   # GET /projects
   def index
-    @projects = Project.all
-
-    render json: @projects
+    render json: Project.page(page).per(per_page).map(&:to_api)
   end
 
   # GET /projects/1

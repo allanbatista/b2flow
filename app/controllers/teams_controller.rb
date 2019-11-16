@@ -3,9 +3,7 @@ class TeamsController < AuthenticatedController
 
   # GET /teams
   def index
-    @teams = Team.all
-
-    render json: @teams
+    render json: Team.page(page).per(per_page).map(&:to_api)
   end
 
   # GET /teams/1

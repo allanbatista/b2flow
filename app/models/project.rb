@@ -9,6 +9,6 @@ class Project < ApplicationRecord
   end
 
   def name=(new_name)
-    self['name'] = new_name.downcase if new_name.present?
+    self['name'] = new_name.downcase.strip if new_name.present?
   end
 end

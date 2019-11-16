@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :jobs
   resources :projects, except: [:destroy]
   resources :teams, except: [:destroy]
   resources :users, only: [] do
