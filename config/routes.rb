@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :teams
   resources :users, only: [] do
     collection do
       get :me
