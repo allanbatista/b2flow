@@ -67,7 +67,7 @@ RSpec.describe "Teams", type: :request do
       team = Team.create(name: "SuperTeam")
       team2 = Team.create(name: "X-Team")
 
-      patch team_path(team), params: {name: "X-Team"}, headers: { 'x-auth-token' => user.to_token }
+      patch team_path(team), params: {name: team2.name}, headers: { 'x-auth-token' => user.to_token }
 
       team.reload
       expect(response).to have_http_status(422)
