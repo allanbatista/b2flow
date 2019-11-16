@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :teams
+  resources :teams, except: [:destroy]
   resources :users, only: [] do
     collection do
       get :me
