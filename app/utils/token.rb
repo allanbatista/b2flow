@@ -32,5 +32,7 @@ module Token
     return data['payload']
   rescue JWT::ExpiredSignature => e
     nil
+  rescue JWT::DecodeError => e
+    nil
   end
 end

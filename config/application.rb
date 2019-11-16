@@ -19,11 +19,15 @@ require "action_view/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+ENV.update({'TZ' => 'UTC'})
+
 module B2flowApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
+    config.time_zone = "UTC"
+    config.active_record.default_timezone = :utc
     config.autoload_paths += %W(#{config.root}/app/utils)
 
     # Settings in config/environments/* take precedence over those specified here.
