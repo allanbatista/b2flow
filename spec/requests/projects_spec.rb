@@ -8,21 +8,21 @@ RSpec.describe "/projects", type: :request do
 
   describe "authentication" do
     it "should authentication fail" do
-      get projects_path
+      get projects_path(team.name)
       expect(response).to have_http_status(401)
     end
   end
 
   describe "GET /projects" do
     it "works! (now write some real specs)" do
-      get projects_path, headers: { 'x-auth-token' => user.to_token }
+      get projects_path(team.name), headers: { 'x-auth-token' => user.to_token }
       expect(response).to have_http_status(200)
     end
   end
 
   describe "GET /teams/:id" do
     it "should show project" do
-      get project_path(project), headers: { 'x-auth-token' => user.to_token }
+      get project_path(team.name, project.name), headers: { 'x-auth-token' => user.to_token }
 
       response_project = JSON.parse(response.body)
       expect(response).to have_http_status(200)
@@ -37,7 +37,7 @@ RSpec.describe "/projects", type: :request do
 
   describe "POST /projects" do
     it "should create a new project" do
-      post projects_path, params: {name: "X-Project", team_id: team.id}, headers: { 'x-auth-token' => user.to_token }
+      post projects_path(team.name), params: {name: "X-Project"}, headers: { 'x-auth-token' => user.to_token }
 
       response_project = JSON.parse(response.body)
 
@@ -50,7 +50,7 @@ RSpec.describe "/projects", type: :request do
       project = Project.create(name: "MyOtherProject", team: team)
       expect(project).to be_persisted
 
-      post projects_path, params: {name: "MyOtherProject", team_id: team.id}, headers: { 'x-auth-token' => user.to_token }
+      post projects_path(team.name), params: {name: "MyOtherProject"}, headers: { 'x-auth-token' => user.to_token }
 
       expect(response).to have_http_status(422)
     end
@@ -59,7 +59,7 @@ RSpec.describe "/projects", type: :request do
       project = Project.create(name: "MyOtherProject", team: team)
       expect(project).to be_persisted
 
-      post projects_path, params: {name: "MyOtherProject", team_id: team2.id}, headers: { 'x-auth-token' => user.to_token }
+      post projects_path(team2.name), params: {name: "MyOtherProject"}, headers: { 'x-auth-token' => user.to_token }
       expect(response).to have_http_status(201)
     end
   end
@@ -68,7 +68,7 @@ RSpec.describe "/projects", type: :request do
     it "should update team name" do
       project = Project.create(name: "ProjectName", team: team)
 
-      patch project_path(project), params: {name: "X-Super-Project"}, headers: { 'x-auth-token' => user.to_token }
+      patch project_path(team.name, project.name), params: {name: "X-Super-Project"}, headers: { 'x-auth-token' => user.to_token }
 
       project.reload
       expect(response).to have_http_status(200)
@@ -79,7 +79,7 @@ RSpec.describe "/projects", type: :request do
       project = Project.create(name: "SuperProject", team: team)
       project2 = Project.create(name: "X-Project", team: team)
 
-      patch project_path(project), params: {name: project2.name}, headers: { 'x-auth-token' => user.to_token }
+      patch project_path(team.name, project.name), params: {name: project2.name}, headers: { 'x-auth-token' => user.to_token }
 
       project.reload
       expect(response).to have_http_status(422)

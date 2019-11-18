@@ -6,6 +6,6 @@ class ApplicationController < ActionController::API
   end
 
   def page
-    max(1, params["page"].to_i)
+    [1, params["page"].to_i].max
   end
 end

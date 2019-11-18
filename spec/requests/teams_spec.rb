@@ -20,7 +20,7 @@ RSpec.describe "Teams", type: :request do
 
   describe "GET /teams/:id" do
     it "should get teams" do
-      get team_path(team), headers: { 'x-auth-token' => user.to_token }
+      get team_path(team.name), headers: { 'x-auth-token' => user.to_token }
 
       response_team = JSON.parse(response.body)
       expect(response).to have_http_status(200)
@@ -56,7 +56,7 @@ RSpec.describe "Teams", type: :request do
     it "should update team name" do
       team = Team.create(name: "SuperTeam")
 
-      patch team_path(team), params: {name: "X-Team"}, headers: { 'x-auth-token' => user.to_token }
+      patch team_path(team.name), params: {name: "X-Team"}, headers: { 'x-auth-token' => user.to_token }
 
       team.reload
       expect(response).to have_http_status(200)
@@ -67,7 +67,7 @@ RSpec.describe "Teams", type: :request do
       team = Team.create(name: "SuperTeam")
       team2 = Team.create(name: "X-Team")
 
-      patch team_path(team), params: {name: team2.name}, headers: { 'x-auth-token' => user.to_token }
+      patch team_path(team.name), params: {name: team2.name}, headers: { 'x-auth-token' => user.to_token }
 
       team.reload
       expect(response).to have_http_status(422)

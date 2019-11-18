@@ -1,5 +1,6 @@
 class Project < ApplicationRecord
   belongs_to :team
+  has_many :jobs
 
   validates :name, presence: true, uniqueness: { scope: [:team_id] }
   validates :team, presence: true

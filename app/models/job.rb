@@ -1,17 +1,15 @@
 class Job < ApplicationRecord
-  belongs_to :team
   belongs_to :project
   has_many :versions, class_name: "JobVersion"
 
   validates :name, presence: true, uniqueness: { scope: [:project_id] }
-  validates :team, presence: true
   validates :project, presence: true
   validates :enable, presence: true
   validates :engine, presence: true, inclusion: { in: %w(docker),  message: "%{value} is not a valid engine" }
   validates :cron, allow_blank: true , format: { with: Regexp.new('\A((\*|\d+((\/|\-){0,1}(\d+))*)\s*){5}\z') }
 
   def to_api
-    as_json(only: [:id, :name, :team_id, :project_id, :engine, :cron, :enable, :created_at, :updated_at])
+    as_json(only: [:id, :name, :project_id, :engine, :cron, :enable, :created_at, :updated_at])
   end
 
   def name=(new_name)

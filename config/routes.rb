@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  resources :jobs
-  resources :projects, except: [:destroy]
+  scope "/teams/:team_name" do
+    resources :projects, except: [:destroy]
+
+    scope "/projects/:project_name" do
+      resources :jobs, except: [:destroy]
+    end
+  end
+
   resources :teams, except: [:destroy]
   resources :users, only: [] do
     collection do

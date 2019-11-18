@@ -1,9 +1,8 @@
 FactoryBot.define do
   factory :job do
-    name { "MyString" }
-    team { nil }
-    project { nil }
-    engine { "MyString" }
-    scheduler { "MyString" }
+    name { "default-job" }
+    project { FactoryBot.create(:project) }
+    engine { "docker" }
+    cron { "0 0 * * *" }
   end
 end

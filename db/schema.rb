@@ -49,7 +49,6 @@ ActiveRecord::Schema.define(version: 2019_11_16_174045) do
 
   create_table "jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
-    t.uuid "team_id", null: false
     t.uuid "project_id", null: false
     t.string "engine", null: false
     t.string "cron"
@@ -60,7 +59,6 @@ ActiveRecord::Schema.define(version: 2019_11_16_174045) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name", "project_id"], name: "index_jobs_on_name_and_project_id", unique: true
     t.index ["project_id"], name: "index_jobs_on_project_id"
-    t.index ["team_id"], name: "index_jobs_on_team_id"
   end
 
   create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -90,6 +88,5 @@ ActiveRecord::Schema.define(version: 2019_11_16_174045) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "job_versions", "jobs"
   add_foreign_key "jobs", "projects"
-  add_foreign_key "jobs", "teams"
   add_foreign_key "projects", "teams"
 end

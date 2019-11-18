@@ -16,7 +16,7 @@ class TeamsController < AuthenticatedController
     @team = Team.new(team_params)
 
     if @team.save
-      render json: @team.to_api, status: :created, location: @team
+      render json: @team.to_api, status: :created, location: team_path(@team.name)
     else
       render json: @team.errors, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class TeamsController < AuthenticatedController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_team
-      @team = Team.find(params[:id])
+      @team = Team.find_by_name(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
