@@ -40,11 +40,9 @@ ActiveRecord::Schema.define(version: 2019_11_16_174045) do
 
   create_table "job_versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "job_id", null: false
-    t.integer "version", default: 1
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["job_id"], name: "index_job_versions_on_job_id"
-    t.index ["version", "job_id"], name: "index_job_versions_on_version_and_job_id", unique: true
   end
 
   create_table "jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

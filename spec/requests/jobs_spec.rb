@@ -81,7 +81,7 @@ RSpec.describe "Jobs", type: :request do
     it "should not create without a correnct engine" do
       params = {
           name: "new-job",
-          engine: 'unkown',
+          engine: 'unknown',
           cron: '1 1 * * *'
       }
 

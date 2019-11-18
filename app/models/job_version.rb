@@ -4,19 +4,13 @@ class JobVersion < ApplicationRecord
   belongs_to :job
 
   validates :job, presence: true
-  validates :version, presence: true, uniqueness: { scope: [:job_id] }
-  validates :source, blob: { content_type: ['application/zip'] }
+  validates :source, presence: true, blob: { content_type: ['application/zip'] }
 
-  before_save :ensure_job_not_persisted!
-  before_create :set_version!
-
-  protected
-
-  def set_version!
-    self['version'] = job.versions.count + 1
+  def to_api
+    as_json(only: [:id, :job_id], :methods => [:source_url])
   end
 
-  def ensure_job_not_persisted!
-    raise "not permit update" if self.persisted?
+  def source_url
+    Rails.application.routes.url_helpers.rails_blob_url(source)
   end
 end

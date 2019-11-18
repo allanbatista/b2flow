@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'AppConfig' do
   before do
-    @defaults = YAML.load_file "#{Rails.root}/config/application.yml"
+    @defaults = YAML.load_file("#{Rails.root}/config/application.yml")[Rails.env]
   end
 
   it "should get default value" do

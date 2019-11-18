@@ -5,7 +5,7 @@
 module AppConfig
   ##
   # defaults values from variables config that are defined in config/application.yml
-  defaults = YAML.load_file "#{Rails.root}/config/application.yml"
+  defaults = YAML.load_file("#{Rails.root}/config/application.yml")[Rails.env] || {}
 
   ##
   # Define all variables as methods
