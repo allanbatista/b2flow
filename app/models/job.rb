@@ -9,7 +9,7 @@ class Job < ApplicationRecord
   validates :cron, allow_blank: true , format: { with: Regexp.new('\A((\*|\d+((\/|\-){0,1}(\d+))*)\s*){5}\z') }
 
   def to_api
-    as_json(only: [:id, :name, :project_id, :engine, :cron, :enable, :created_at, :updated_at])
+    as_json(only: [:id, :name, :project_id, :engine, :cron, :enable, :created_at, :updated_at, :start_at, :end_at])
   end
 
   def name=(new_name)

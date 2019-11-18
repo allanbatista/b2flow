@@ -65,7 +65,7 @@ RSpec.describe "/projects", type: :request do
   end
 
   describe "PATCH /projects" do
-    it "should update team name" do
+    it "should update project name" do
       project = Project.create(name: "ProjectName", team: team)
 
       patch project_path(team.name, project.name), params: {name: "X-Super-Project"}, headers: { 'x-auth-token' => user.to_token }

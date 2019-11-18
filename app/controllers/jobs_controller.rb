@@ -29,7 +29,7 @@ class JobsController < AuthenticatedController
   # PATCH/PUT /jobs/1
   def update
     if @job.update(job_params)
-      render json: @job
+      render json: @job.to_api
     else
       render json: @job.errors, status: :unprocessable_entity
     end
@@ -52,13 +52,13 @@ class JobsController < AuthenticatedController
 
     def ensure_project
       unless @project.present?
-        return render json: { message: "project is required" }, status: 422
+        return render json: { message: "project with name \"#{params[:project_name]}\" was not found. project is required" }, status: 422
       end
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_job
-      @job = Job.find_by_name(params[:id])
+      @job = Job.find_by_name(params[:job_name])
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -33,6 +33,16 @@ RSpec.describe Job, type: :model do
       job = Job.create(name: "MyJob", project: project, engine: "docker", cron: "INVALID")
       expect(job).not_to be_persisted
     end
+
+    it "should disable cron" do
+      job = Job.create(name: "MyJob", project: project, engine: "docker", cron: "* * * * *")
+      expect(job).to be_persisted
+      expect(job.cron).to eq('* * * * *')
+
+      job.update(cron: nil)
+      expect(job).to be_persisted
+      expect(job.cron).to be_nil
+    end
   end
 
   context "#to_api" do
@@ -47,7 +57,9 @@ RSpec.describe Job, type: :model do
          "updated_at" => job.updated_at.strftime("%FT%T.%L%z"),
          "engine" => "docker",
          "cron" => "* * * * *",
-         "enable" => true
+         "enable" => true,
+         "start_at" => nil,
+         "end_at" => nil
        })
     end
   end

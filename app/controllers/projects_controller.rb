@@ -40,7 +40,7 @@ class ProjectsController < AuthenticatedController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_project
-      @project = @team.projects.find_by_name(params[:id])
+      @project = @team.projects.find_by_name(params[:project_name])
     end
 
     # Only allow a trusted parameter "white list" through.
