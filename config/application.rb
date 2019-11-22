@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 
 ENV.update({'TZ' => 'UTC'})
 
-module B2flowApi
+module B2flowCore
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
