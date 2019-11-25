@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
       scope "/jobs/:job_name" do
         resources :versions, except: [:destroy]
+        resources :settings, except: [:destroy]
       end
     end
   end

@@ -7,7 +7,7 @@ class JobVersion < ApplicationRecord
   validates :source, presence: true, blob: { content_type: ['application/zip'] }
 
   def to_api
-    as_json(only: [:id, :job_id], :methods => [:source_url])
+    as_json(only: [:id, :job_id, :settings], :methods => [:source_url])
   end
 
   def source_url

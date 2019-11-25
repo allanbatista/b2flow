@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_16_174045) do
+ActiveRecord::Schema.define(version: 2019_11_25_136145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -38,11 +38,37 @@ ActiveRecord::Schema.define(version: 2019_11_16_174045) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "job_executions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status", default: "enqueued", null: false
+    t.datetime "enqueued_at"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.uuid "job_id", null: false
+    t.uuid "job_version_id", null: false
+    t.uuid "job_setting_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["job_id"], name: "executions_job_index"
+    t.index ["job_id"], name: "index_job_executions_on_job_id"
+    t.index ["job_setting_id"], name: "index_job_executions_on_job_setting_id"
+    t.index ["job_version_id"], name: "index_job_executions_on_job_version_id"
+  end
+
+  create_table "job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "job_id", null: false
+    t.jsonb "settings", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["job_id"], name: "index_job_settings_on_job_id"
+    t.index ["job_id"], name: "settings_job_index"
+  end
+
   create_table "job_versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "job_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["job_id"], name: "index_job_versions_on_job_id"
+    t.index ["job_id"], name: "versions_job_index"
   end
 
   create_table "jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -84,6 +110,10 @@ ActiveRecord::Schema.define(version: 2019_11_16_174045) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "job_executions", "job_settings"
+  add_foreign_key "job_executions", "job_versions"
+  add_foreign_key "job_executions", "jobs"
+  add_foreign_key "job_settings", "jobs"
   add_foreign_key "job_versions", "jobs"
   add_foreign_key "jobs", "projects"
   add_foreign_key "projects", "teams"

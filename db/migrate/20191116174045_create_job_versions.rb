@@ -5,5 +5,7 @@ class CreateJobVersions < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
+
+    add_index :job_versions, :job_id, name: "versions_job_index"
   end
 end

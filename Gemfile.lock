@@ -58,8 +58,11 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2)
+    amq-protocol (2.3.0)
     bcrypt (3.1.13)
     builder (3.2.3)
+    bunny (2.14.3)
+      amq-protocol (~> 2.3, >= 2.3.0)
     byebug (11.0.1)
     codecov (0.1.16)
       json
@@ -113,6 +116,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
+    parse-cron (0.1.4)
     pg (1.1.4)
     puma (3.12.1)
     rack (2.0.7)
@@ -198,12 +202,14 @@ PLATFORMS
 DEPENDENCIES
   activestorage-validator
   bcrypt (~> 3.1.7)
+  bunny
   byebug
   codecov
   factory_bot_rails
   jwt
   kaminari
   listen (>= 3.0.5, < 3.2)
+  parse-cron
   pg (>= 0.18, < 2.0)
   puma (~> 3.11)
   rails (~> 6.0.0)

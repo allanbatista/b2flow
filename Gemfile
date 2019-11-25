@@ -49,3 +49,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'jwt'
 gem 'activestorage-validator'
 gem 'kaminari'
+gem 'parse-cron'
+gem "bunny"
