@@ -26,7 +26,8 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'rack-cors'
 
 group :test do
-  gem 'codecov', :require => false
+  gem 'codecov', require: false
+  gem 'bunny-mock', require: false
 end
 
 group :development, :test do

@@ -11,6 +11,7 @@ team = Team.create(name: "x-team")
 project = team.projects.create(name: 'x-project')
 10.times do |n|
   job = project.jobs.create(name: "x-job-#{n}", engine: 'docker')
+  job.settings.create(settings: { "ANY_NUMBER" => SecureRandom.rand })
   version = job.versions.new
   version.source.attach(Rack::Test::UploadedFile.new(File.open("#{Rails.root}/spec/fixtures/jobs/versions/source.zip"), "application/zip", true))
   version.save

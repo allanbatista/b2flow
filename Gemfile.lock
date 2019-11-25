@@ -63,6 +63,8 @@ GEM
     builder (3.2.3)
     bunny (2.14.3)
       amq-protocol (~> 2.3, >= 2.3.0)
+    bunny-mock (1.7.0)
+      bunny (>= 1.7)
     byebug (11.0.1)
     codecov (0.1.16)
       json
@@ -203,6 +205,7 @@ DEPENDENCIES
   activestorage-validator
   bcrypt (~> 3.1.7)
   bunny
+  bunny-mock
   byebug
   codecov
   factory_bot_rails

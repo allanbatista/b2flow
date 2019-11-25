@@ -28,7 +28,7 @@ module B2flowCore
 
     config.time_zone = "UTC"
     config.active_record.default_timezone = :utc
-    config.autoload_paths += %W(#{config.root}/app/utils)
+    config.autoload_paths += %W(#{config.root}/app/utils #{config.root}/app/services/**/*.rb)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

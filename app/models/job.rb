@@ -2,6 +2,7 @@ class Job < ApplicationRecord
   belongs_to :project
   has_many :versions, class_name: "JobVersion"
   has_many :settings, class_name: "JobSetting"
+  has_many :executions, class_name: "JobExecution"
 
   validates :name, presence: true, uniqueness: { scope: [:project_id] }
   validates :project, presence: true
@@ -11,10 +12,6 @@ class Job < ApplicationRecord
 
   def to_api
     as_json(only: [:id, :name, :project_id, :engine, :cron, :enable, :created_at, :updated_at, :start_at, :end_at])
-  end
-
-  def to_message
-    as_json(methods: [:current_version])
   end
 
   def current_version

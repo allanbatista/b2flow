@@ -1,34 +1,59 @@
-class Manager
-  def run
-    loop do
-      execute
+module Scheduler
+  class Manager
+    attr_reader :publisher
 
-      sleep_time = (Time.now + 1.minute) - Time.now
+    def initialize
+      @publisher = JobPublisher.new(Broaker::RabbitPublisher.new(AppConfig.B2FLOW__QUEUE__NEW_JOBS))
+    end
 
-      if sleep_time > 0
-        puts "Waiting next interation"
-        sleep(sleep_time)
+    def run
+      Rails.logger.info("start executing")
+
+      loop do
+        execute(Time.now)
+
+        sleep_time = (Time.now + 1.minute) - Time.now
+
+        if sleep_time > 0
+          Rails.logger.info "waiting next iteration. sleeping #{sleep_time.round(2)}s"
+          sleep(sleep_time)
+        end
       end
     end
-  end
 
-  def execute
-    now = Time.now
-    puts now
+    def execute(now)
+      Rails.logger.info "executing #{now}"
+      jobs = executable_jobs(now)
 
-    jobs = Job.where(enable: True, cron: nil)
-    jobs = jobs.where("start_at <= ? or start_at is NULL", now)
-    jobs = jobs.where("end_at <= ? or end_at is NULL", now)
+      Rails.logger.info("nothing to execute") if jobs.empty?
 
-    jobs.each do |job|
-      JobPublisher.enqueue!(job) if should_enqueue?(job, now)
+      jobs.each do |job|
+        publisher.publish(job) if should_enqueue?(job, now)
+      rescue => e
+        Rails.logger.error([job, e])
+      end
     end
-  end
 
-  ##
-  # should valid only when next execute should be current time less 1 minute
-  # and next execute should be equal current time
-  def should_enqueue?(job, now)
-    CronParser.new(job.cron).next(now.beginning_of_minute - 1.minute) == now.beginning_of_minute
+    def executable_jobs(now)
+      jobs = Job.where(enable: true).where("cron is not NULL")
+      jobs = jobs.where("start_at <= ? or start_at is NULL", now)
+      jobs.where("end_at > ? or end_at is NULL", now)
+    end
+
+    ##
+    # should valid only when next execute should be current time less 1 minute
+    # and next execute should be equal current time
+    def should_enqueue?(job, now)
+      cron_validate = CronParser.new(job.cron).next(now.beginning_of_minute - 1.minute) == now.beginning_of_minute
+      cron_validate && !is_running?(job)
+    rescue => e
+      Rails.logger.error(e)
+    end
+
+    ##
+    # this check if has any job in a state running
+    def is_running?(job)
+      job.executions.where(status: %w(running enqueued)).limit(1).first.present?
+    end
   end
 end
