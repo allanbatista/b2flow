@@ -63,6 +63,6 @@ class JobsController < AuthenticatedController
 
     # Only allow a trusted parameter "white list" through.
     def job_params
-      params.permit(:name, :engine, :cron, :enable)
+      params.permit(:name, :engine, :cron, :enable, :start_at, :end_at)
     end
 end

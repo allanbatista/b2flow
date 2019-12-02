@@ -64,7 +64,8 @@ RSpec.describe "Jobs", type: :request do
       params = {
           name: "new-job",
           engine: 'docker',
-          cron: '1 1 * * *'
+          cron: '1 1 * * *',
+          start_at: "2020-01-01T00:00:00.000+0000"
       }
 
       post jobs_path(project.team.name, project.name), params: params, headers: { 'x-auth-token' => user.to_token  }
@@ -75,6 +76,7 @@ RSpec.describe "Jobs", type: :request do
       expect(response_job['project_id']).to eq(project.id.to_s)
       expect(response_job['engine']).to eq('docker')
       expect(response_job['cron']).to eq("1 1 * * *")
+      expect(response_job['start_at']).to eq("2020-01-01T00:00:00.000+0000")
       expect(response_job['enable']).to eq(true)
     end
 

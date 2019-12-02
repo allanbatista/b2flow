@@ -52,3 +52,4 @@ gem 'activestorage-validator'
 gem 'kaminari'
 gem 'parse-cron'
 gem "bunny"
+gem 'logist'
