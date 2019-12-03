@@ -1,8 +1,8 @@
 test:
-  url: <%= ENV['B2FLOW__DB__URI'] %>
+  url: <%= AppConfig.B2FLOW__DATABASE__URI %>
 
 development:
-  url: <%= ENV['B2FLOW__DB__URI'] %>
+  url: <%= AppConfig.B2FLOW__DATABASE__URI %>
 
 production:
-  url: <%= ENV['B2FLOW__DB__URI'] %>
+  url: <%= AppConfig.B2FLOW__DATABASE__URI %>

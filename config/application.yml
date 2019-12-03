@@ -1,17 +1,27 @@
 ---
+default: &default
+  B2FLOW__TOKEN_SECRET: oUyCzW5GnSs9p4g2CdBQHX4kK1lXZKNMAetaRQftibwYClWx8q5SHRkW1MNbACr707ag1m7RxdQvgPdyYS9GtM5otJ9mDURRjghvIzhk9KGLU6rLHT1wZC152K0F7EcUdslhV7hFn4mfH90yhi4fClR0vMWknH9Q0MQBlbLhOwaOScHYNCHFWa35ZujOaxRMple9FUCLqJc5xzX6GnDQGyrTcDH6aYro7rYn89Nyf8hepe2WThRLzIQLNbEtS5f3
+  B2FLOW__BROAKER__QUEUE__JOBS: jobs
+  B2FLOW__BROAKER__URI: amqp://localhost:5672
+  B2FLOW__DATABASE__URI: postgres://postgres:password@localhost:5432/b2flow?encoding=utf-8&pool=5
+  B2FLOW__LOGLEVEL: info
+  B2FLOW__STORAGE__TYPE: local
+  B2FLOW__STORAGE__S3__ACCESS_KEY_ID: ""
+  B2FLOW__STORAGE__S3__SECRET_KEY_ID: ""
+  B2FLOW__STORAGE__S3__REGION: ""
+  B2FLOW__STORAGE__S3__BUCKET: ""
 test:
-  B2FLOW__HOSTNAME: localhost
-  B2FLOW__TOKEN_SECRET: oUyCzW5GnSs9p4g2CdBQHX4kK1lXZKNMAetaRQftibwYClWx8q5SHRkW1MNbACr707ag1m7RxdQvgPdyYS9GtM5otJ9mDURRjghvIzhk9KGLU6rLHT1wZC152K0F7EcUdslhV7hFn4mfH90yhi4fClR0vMWknH9Q0MQBlbLhOwaOScHYNCHFWa35ZujOaxRMple9FUCLqJc5xzX6GnDQGyrTcDH6aYro7rYn89Nyf8hepe2WThRLzIQLNbEtS5f3
-  B2FLOW__QUEUE__NEW_JOBS: test-jobs
-  B2FLOW__RABBIT__URI: redis://localhost:6372/1
-  B2FLOW__DB__URI: postgres://postgres:password@localhost:5432/b2flow_api_test?encoding=utf-8&pool=5
-  B2FLOW__LOGLEVEL: error
+  <<: *default
+  B2FLOW__BROAKER__QUEUE__JOBS: test-jobs
+  B2FLOW__BROAKER__URI: amqp://localhost:5672
+  B2FLOW__DATABASE__URI: postgres://postgres:password@localhost:5432/b2flow_api_test?encoding=utf-8&pool=5
+  B2FLOW__STORAGE__TYPE: test
 development:
-  B2FLOW__HOSTNAME: localhost:3000
-  B2FLOW__TOKEN_SECRET: oUyCzW5GnSs9p4g2CdBQHX4kK1lXZKNMAetaRQftibwYClWx8q5SHRkW1MNbACr707ag1m7RxdQvgPdyYS9GtM5otJ9mDURRjghvIzhk9KGLU6rLHT1wZC152K0F7EcUdslhV7hFn4mfH90yhi4fClR0vMWknH9Q0MQBlbLhOwaOScHYNCHFWa35ZujOaxRMple9FUCLqJc5xzX6GnDQGyrTcDH6aYro7rYn89Nyf8hepe2WThRLzIQLNbEtS5f3
-  B2FLOW__QUEUE__NEW_JOBS: jobs
-  B2FLOW__RABBIT__URI: redis://localhost:6372/0
-  B2FLOW__DB__URI: postgres://postgres:password@localhost:5432/b2flow_api_development?encoding=utf-8&pool=5
+  <<: *default
+  B2FLOW__BROAKER__URI: amqp://localhost:5672
+  B2FLOW__DATABASE__URI: postgres://postgres:password@localhost:5432/b2flow_api_development?encoding=utf-8&pool=5
   B2FLOW__LOGLEVEL: debug
+  B2FLOW__STORAGE__TYPE: local
 production:
+  <<: *default
   B2FLOW__LOGLEVEL: info

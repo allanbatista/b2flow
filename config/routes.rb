@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  default_url_options :host => AppConfig.B2FLOW__HOSTNAME rescue puts "not hostname defined"
-
   scope "/teams/:team_name" do
     resources :projects, except: [:destroy], param: :project_name
 

@@ -47,6 +47,9 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
+Rails.application.routes.default_url_options[:host] = "localhost:3000"
+
 RSpec.configure do |config|
   config.before(:each) do
     # AMQFactory.connection = BunnyMock.new.start

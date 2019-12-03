@@ -53,3 +53,5 @@ gem 'kaminari'
 gem 'parse-cron'
 gem "bunny"
 gem 'logist'
+
+gem "aws-sdk-s3", require: false

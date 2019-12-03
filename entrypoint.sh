@@ -7,10 +7,13 @@ case $1 in
     rails s
     ;;
   "scheduler")
-    rake scheduler:mangager
+    rake scheduler:manager
     ;;
   *)
     # shellcheck disable=SC2068
     exec $@
     ;;
 esac
+
+echo "shutdown " + $1
+exit 1

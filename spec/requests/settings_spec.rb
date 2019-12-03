@@ -45,6 +45,7 @@ RSpec.describe "Settings", type: :request do
     it "should list all jobs" do
       10.times {|n| post settings_path(team.name, project.name, job.name), params: { settings: {} }, headers: headers }
 
+
       get settings_path(team.name, project.name, job.name), headers: headers
 
       data = JSON.parse(response.body)

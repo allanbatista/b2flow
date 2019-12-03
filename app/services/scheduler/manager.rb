@@ -3,7 +3,7 @@ module Scheduler
     attr_reader :publisher
 
     def initialize
-      @publisher = JobPublisher.new(Broaker::RabbitPublisher.new(AppConfig.B2FLOW__QUEUE__NEW_JOBS))
+      @publisher = JobPublisher.new(Broaker::RabbitPublisher.new(AppConfig.B2FLOW__BROAKER__QUEUE__JOBS))
     end
 
     def run

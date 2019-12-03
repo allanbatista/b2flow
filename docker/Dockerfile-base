@@ -1,0 +1,29 @@
+FROM ruby:2.6.5
+
+LABEL author="Allan Batista <allan@allanbatista.com.br>"
+
+# default sh as bash
+SHELL ["/bin/bash", "-c"]
+
+# no interaction
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERM linux
+ENV SLUGIFY_USES_TEXT_UNIDECODE=yes
+
+# install dependencies
+RUN apt-get update && \
+    apt-get install locales apt-utils -y && \
+    apt-get clean
+
+# set default encode
+RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+    echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
+    locale-gen en_US.UTF-8
+
+COPY Gemfile /tmp
+COPY Gemfile.lock /tmp
+
+# install dependencies and build
+RUN cd /tmp && \
+    bundle install

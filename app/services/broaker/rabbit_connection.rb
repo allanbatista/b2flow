@@ -3,7 +3,7 @@ module Broaker
     include ::Singleton
 
     def initialize
-      @conn = Bunny.new(AppConfig.B2FLOW__RABBIT__URI)
+      @conn = Bunny.new(AppConfig.B2FLOW__BROAKER__URI)
       @started = false
     end
 
