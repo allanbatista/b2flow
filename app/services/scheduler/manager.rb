@@ -3,7 +3,7 @@ module Scheduler
     attr_reader :publisher
 
     def initialize
-      @publisher = JobPublisher.new(Broaker::RabbitPublisher.new(AppConfig.B2FLOW__BROAKER__QUEUE__JOBS))
+      @publisher = Broaker::RabbitPublisher.new(AppConfig.B2FLOW__BROAKER__QUEUE__JOBS)
     end
 
     def run
@@ -28,7 +28,7 @@ module Scheduler
       Rails.logger.info("nothing to execute") if jobs.empty?
 
       jobs.each do |job|
-        publisher.publish(job) if should_enqueue?(job, now)
+        publish(job) if should_enqueue?(job, now)
       rescue => e
         Rails.logger.error([job, e])
       end
@@ -54,6 +54,13 @@ module Scheduler
     # this check if has any job in a state running
     def is_running?(job)
       job.executions.where(status: %w(running enqueued)).limit(1).first.present?
+    end
+
+    def publish(job)
+      execution = JobExecution.create_by_job(job)
+      execution.update(enqueued_at: DateTime.now)
+      publisher.publish({job_execution_id: execution.id})
+      Rails.logger.debug(message)
     end
   end
 end

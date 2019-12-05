@@ -1,0 +1,37 @@
+---
+dag:
+  name: Dag Name
+  scheduler: 0 * * * *
+  jobs:
+    team/project/job1:
+      type: docker
+      memory: 16GB
+      cpu: 4
+    team/project/job2:
+      type: spark
+      nodes: 4
+      memory: 64GB
+      cpu: 16
+      config:
+        spark.log: 1
+    team/project/job3:
+      type: docker
+      memory: 1GB
+      cpu: 1
+      dependencies:
+        - team/project/job1
+        - team/project/job2
+    team/project/job4:
+      type: docker
+      memory: 1GB
+      cpu: 1
+      dependencies:
+        - team/project/job2
+    team/project/job5:
+      type: docker
+      memory: 1GB
+      cpu: 1
+      dependencies:
+        - team/project/job3
+        - team/project/job4
+

@@ -86,4 +86,20 @@ services:
       B2FLOW__DATABASE__URI: postgres://postgres:password@database:5432/b2flow?encoding=utf-8&pool=5
       B2FLOW__LOGLEVEL: info
 
+  executor:
+    image: b2flow
+    command: executor
+    restart: unless-stopped
+    links:
+      - database
+      - queue
+    depends_on:
+      - webapp
+    environment:
+      RAILS_ENV: production
+      B2FLOW__BROAKER__QUEUE__JOBS: jobs
+      B2FLOW__BROAKER__URI: amqp://queue:5672
+      B2FLOW__DATABASE__URI: postgres://postgres:password@database:5432/b2flow?encoding=utf-8&pool=5
+      B2FLOW__LOGLEVEL: info
+
 

@@ -9,11 +9,11 @@ case $1 in
   "scheduler")
     rake scheduler:manager
     ;;
+  "executor")
+    rake scheduler:executor
+    ;;
   *)
     # shellcheck disable=SC2068
     exec $@
     ;;
 esac
-
-echo "shutdown " + $1
-exit 1

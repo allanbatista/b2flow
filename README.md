@@ -73,7 +73,7 @@ Um time pode ter muitos projetos e é a unidade macro de gerenciamento.
 **index**
 
 ```
-GET /projects
+GET /teams
 X-Auth-Token: eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImlkIjoiODVkMzRiOGMtNWE1MC00OGY2LWJkOGMtZTAzNWQxOGEwY2RjIn0sImV4cCI6MTYwNjkzNTA0MH0.uVMaHgE3LugJu74k9pAU8sdSzF65z1RIa62RLNLwjFE
 
 ---
@@ -92,7 +92,7 @@ status: 200
 **show**
 
 ```
-GET /projects/x-team
+GET /teams/x-team
 X-Auth-Token: eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImlkIjoiODVkMzRiOGMtNWE1MC00OGY2LWJkOGMtZTAzNWQxOGEwY2RjIn0sImV4cCI6MTYwNjkzNTA0MH0.uVMaHgE3LugJu74k9pAU8sdSzF65z1RIa62RLNLwjFE
 
 ---
@@ -109,7 +109,7 @@ status: 200
 **create**
 
 ```
-GET /projects/x-team
+GET /teams/x-team
 X-Auth-Token: eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImlkIjoiODVkMzRiOGMtNWE1MC00OGY2LWJkOGMtZTAzNWQxOGEwY2RjIn0sImV4cCI6MTYwNjkzNTA0MH0.uVMaHgE3LugJu74k9pAU8sdSzF65z1RIa62RLNLwjFE
 
 {
@@ -130,7 +130,7 @@ status: 201
 **update**
 
 ```
-PATCH /projects/new-team
+PATCH /teams/new-team
 X-Auth-Token: eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImlkIjoiODVkMzRiOGMtNWE1MC00OGY2LWJkOGMtZTAzNWQxOGEwY2RjIn0sImV4cCI6MTYwNjkzNTA0MH0.uVMaHgE3LugJu74k9pAU8sdSzF65z1RIa62RLNLwjFE
 
 {
