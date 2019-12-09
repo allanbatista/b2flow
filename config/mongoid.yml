@@ -1,0 +1,27 @@
+test:
+  clients:
+    default:
+      uri: <%= AppConfig.B2FLOW__DATABASE__URI %>
+
+  options:
+    raise_not_found_error: false
+    use_utc: true
+    log_level: <%= AppConfig.B2FLOW__LOGLEVEL  %>
+development:
+  clients:
+    default:
+      uri: <%= AppConfig.B2FLOW__DATABASE__URI %>
+
+  options:
+    raise_not_found_error: false
+    use_utc: true
+    log_level: <%= AppConfig.B2FLOW__LOGLEVEL  %>
+production:
+  clients:
+    default:
+      uri: <%= AppConfig.B2FLOW__DATABASE__URI %>
+
+  options:
+    raise_not_found_error: false
+    use_utc: true
+    log_level: <%= AppConfig.B2FLOW__LOGLEVEL  %>

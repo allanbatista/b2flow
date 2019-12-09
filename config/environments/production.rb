@@ -100,4 +100,18 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  #
+  if AppConfig.B2FLOW__STORAGE__TYPE.upcase == "S3"
+    config.paperclip_defaults = {
+        :storage => :s3,
+        :s3_host_name => AppConfig.AWS__HOST__NAME,
+        :s3_credentials => {
+            :access_key_id => AppConfig.B2FLOW__STORAGE__S3__ACCESS_KEY_ID,
+            :secret_access_key => AppConfig.B2FLOW__STORAGE__S3__SECRET_KEY_ID,
+            :s3_region => AppConfig.B2FLOW__STORAGE__S3__REGION
+        },
+        :bucket => AppConfig.B2FLOW__STORAGE__S3__BUCKET,
+        :path => [AppConfig.B2FLOW__STORAGE__S3__PREFIX, ':attachment/:id/:style.:extension'].compact.join("/")
+    }
+  end
 end

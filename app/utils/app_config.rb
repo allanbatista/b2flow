@@ -17,7 +17,8 @@ module AppConfig
   (ENV.keys + defaults.keys).uniq.uniq.each do |key|
     if key.to_s.starts_with?("B2FLOW__")
       define_singleton_method(key) do
-        ENV.fetch(key.to_s, defaults[key.to_s])
+        value = ENV.fetch(key.to_s, defaults[key.to_s])
+        value if value.present?
       end
     end
   end

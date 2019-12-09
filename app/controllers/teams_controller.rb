@@ -34,7 +34,7 @@ class TeamsController < AuthenticatedController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_team
-      @team = Team.find_by_name(params[:team_name])
+      @team = Team.find_by(name: params[:team_name])
     end
 
     # Only allow a trusted parameter "white list" through.

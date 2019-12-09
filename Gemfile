@@ -6,7 +6,7 @@ ruby '2.6.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
 # Use postgresql as the database for Active Record
-gem 'pg', '>= 0.18', '< 2.0'
+# gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -48,10 +48,13 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'jwt'
-gem 'activestorage-validator'
+# gem 'activestorage-validator'
 gem 'kaminari'
 gem 'parse-cron'
 gem "bunny"
 gem 'logist'
 
 gem "aws-sdk-s3", require: false
+gem 'mongoid'
+gem 'mongoid-paperclip'
+gem 'kaminari-mongoid'

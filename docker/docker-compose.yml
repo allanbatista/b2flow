@@ -2,40 +2,12 @@ version: "3.5"
 
 services:
   database:
-    image: postgres:12-alpine
-    restart: unless-stopped
+    image: mongo:4
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    healthcheck:
-      test: [ "CMD", "nc", "-zv", "localhost", "5432" ]
-      interval: 5s
-      timeout: 2s
-      retries: 10
-
-  pgadmin:
-    image: dpage/pgadmin4:4.15
-    restart: unless-stopped
-    links:
-      - database
-    depends_on:
-      - database
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: password
     ports:
-      - 15432:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@b2flow.b2wdigital.io
-      PGADMIN_DEFAULT_PASSWORD: password
-
-  queue:
-    image: rabbitmq:3.8.1-management
-    restart: unless-stopped
-    ports:
-      - 15672:15672
-    healthcheck:
-      test: [ "CMD", "nc", "-zv", "localhost", "5672" ]
-      interval: 5s
-      timeout: 2s
-      retries: 10
+      - 27017:27017
 
   b2flow-base:
     image: b2flow-base
@@ -57,49 +29,11 @@ services:
       - 3000:3000
     links:
       - database
-      - queue
     depends_on:
       - b2flow
       - database
-      - queue
     environment:
       RAILS_ENV: production
       B2FLOW__TOKEN_SECRET: abc123
-      B2FLOW__BROAKER__QUEUE__JOBS: jobs
-      B2FLOW__BROAKER__URI: amqp://queue:5672
-      B2FLOW__DATABASE__URI: postgres://postgres:password@database:5432/b2flow?encoding=utf-8&pool=5
+      B2FLOW__DATABASE__URI: mongodb://mongo:password@database:27017/b2flow?authSource=admin
       B2FLOW__LOGLEVEL: info
-
-  scheduler:
-    image: b2flow
-    command: scheduler
-    restart: unless-stopped
-    links:
-      - database
-      - queue
-    depends_on:
-      - webapp
-    environment:
-      RAILS_ENV: production
-      B2FLOW__BROAKER__QUEUE__JOBS: jobs
-      B2FLOW__BROAKER__URI: amqp://queue:5672
-      B2FLOW__DATABASE__URI: postgres://postgres:password@database:5432/b2flow?encoding=utf-8&pool=5
-      B2FLOW__LOGLEVEL: info
-
-  executor:
-    image: b2flow
-    command: executor
-    restart: unless-stopped
-    links:
-      - database
-      - queue
-    depends_on:
-      - webapp
-    environment:
-      RAILS_ENV: production
-      B2FLOW__BROAKER__QUEUE__JOBS: jobs
-      B2FLOW__BROAKER__URI: amqp://queue:5672
-      B2FLOW__DATABASE__URI: postgres://postgres:password@database:5432/b2flow?encoding=utf-8&pool=5
-      B2FLOW__LOGLEVEL: info
-
-

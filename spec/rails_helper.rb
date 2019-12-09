@@ -41,19 +41,24 @@ end
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
-begin
-  ActiveRecord::Migration.maintain_test_schema!
-rescue ActiveRecord::PendingMigrationError => e
-  puts e.to_s.strip
-  exit 1
-end
+# begin
+#   ActiveRecord::Migration.maintain_test_schema!
+# rescue ActiveRecord::PendingMigrationError => e
+#   puts e.to_s.strip
+#   exit 1
+# end
 
 Rails.application.routes.default_url_options[:host] = "localhost:3000"
 
 RSpec.configure do |config|
   config.before(:each) do
     # AMQFactory.connection = BunnyMock.new.start
+    FactoryBot.reload
     allow(Bunny).to receive(:new) { BunnyMock.new }
+  end
+
+  config.after(:each) do
+    Mongoid.purge!
   end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

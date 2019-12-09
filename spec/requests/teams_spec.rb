@@ -24,7 +24,7 @@ RSpec.describe "Teams", type: :request do
 
       response_team = JSON.parse(response.body)
       expect(response).to have_http_status(200)
-      expect(response_team.keys).to eq(%w(id name created_at updated_at))
+      expect(response_team.keys.sort).to eq(%w(id name created_at updated_at).sort)
       expect(response_team["id"]).to eq(team.id.to_s)
       expect(response_team["name"]).to eq(team.name)
       expect(response_team["created_at"]).to eq(team.created_at.strftime("%FT%T.%L%z"))

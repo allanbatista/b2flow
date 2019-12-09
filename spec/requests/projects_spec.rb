@@ -26,7 +26,7 @@ RSpec.describe "/projects", type: :request do
 
       response_project = JSON.parse(response.body)
       expect(response).to have_http_status(200)
-      expect(response_project.keys).to eq(%w(id name team_id created_at updated_at))
+      expect(response_project.keys.sort).to eq(%w(id name team_id created_at updated_at).sort)
       expect(response_project["id"]).to eq(project.id.to_s)
       expect(response_project["name"]).to eq(project.name)
       expect(response_project["team_id"]).to eq(project.team.id.to_s)

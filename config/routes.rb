@@ -3,12 +3,7 @@ Rails.application.routes.draw do
     resources :projects, except: [:destroy], param: :project_name
 
     scope "/projects/:project_name" do
-      resources :jobs, except: [:destroy], param: :job_name
-
-      scope "/jobs/:job_name" do
-        resources :versions, except: [:destroy]
-        resources :settings, except: [:destroy]
-      end
+      resources :dags, except: [:destroy], param: :dag_name
     end
   end
 
