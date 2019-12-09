@@ -1,5 +1,5 @@
 class ProjectsController < AuthenticatedController
-  before_action :set_team
+  before_action :set_team, :ensure_team
   before_action :set_project, only: [:show, :update, :destroy]
 
   # GET /projects
@@ -16,6 +16,7 @@ class ProjectsController < AuthenticatedController
   def create
     @project = Project.new(project_params)
     @project.team = @team
+
 
     if @project.save
       render json: @project.to_api, status: :created, location: project_path(@team.name, @project.name)
@@ -46,5 +47,11 @@ class ProjectsController < AuthenticatedController
     # Only allow a trusted parameter "white list" through.
     def project_params
       params.permit(:name)
+    end
+
+    def ensure_team
+      unless @team.present?
+        return render json: { message: "team with name \"#{params[:team_name]}\" was not found. team is required" }, status: 422
+      end
     end
 end

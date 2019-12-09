@@ -33,7 +33,7 @@ services:
       - b2flow
       - database
     environment:
-      RAILS_ENV: production
+      RAILS_ENV: development
       B2FLOW__TOKEN_SECRET: abc123
       B2FLOW__DATABASE__URI: mongodb://mongo:password@database:27017/b2flow?authSource=admin
       B2FLOW__LOGLEVEL: info

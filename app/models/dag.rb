@@ -19,7 +19,7 @@ class Dag
   validates :cron, allow_blank: true, format: { with: /\A((\*|\d+((\/|\-){0,1}(\d+))*)\s*){5}\z/ }
 
   def to_api
-    as_json(only: [:_id, :name, :enable, :cron, :config, :team_id, :project_id, :source_url])
+    as_json(only: [:_id, :name, :enable, :cron, :config, :team_id, :project_id], methods: [:source_url])
   end
 
   def source_url

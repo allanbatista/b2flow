@@ -19,9 +19,10 @@ class DagsController < AuthenticatedController
     dag = Dag.new(dag_params)
     dag.project = @project
     dag.team = @team
+    dag.source = StringIO.new(Base64.decode64(params[:source])) if params[:source]
 
     if dag.save
-      render json: dag, status: :created, location: dag_path(@team.name, @project.name, dag.name)
+      render json: dag.to_api, status: :created, location: dag_path(@team.name, @project.name, dag.name)
     else
       render json: dag.errors, status: :unprocessable_entity
     end
@@ -29,6 +30,7 @@ class DagsController < AuthenticatedController
 
   # PATCH/PUT /dags/1
   def update
+    @dag.source = StringIO.new(Base64.decode64(params[:source])) if params[:source]
     if @dag.update(dag_params_update)
       render json: @dag.to_api
     else
@@ -64,10 +66,10 @@ class DagsController < AuthenticatedController
 
     # Only allow a trusted parameter "white list" through.
     def dag_params
-      params.permit(:name, :cron, :enable, :source, :config => {})
+      params.permit(:name, :cron, :enable, :config => {})
     end
 
     def dag_params_update
-      params.permit(:cron, :enable, :source, :config => {})
+      params.permit(:cron, :enable, :config => {})
     end
 end

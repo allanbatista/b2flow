@@ -66,7 +66,8 @@ RSpec.describe "Dags", type: :request do
           name: "new-dag",
           cron: '1 1 * * *',
           enable: true,
-          source: Rack::Test::UploadedFile.new(fixtures_path('dags/source.zip')),
+          # source: Rack::Test::UploadedFile.new(fixtures_path('dags/source.zip')),
+          source: Base64.encode64(File.read(fixtures_path('dags/source.zip'))),
           config: {
               jobs: {
                   job1: {
