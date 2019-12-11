@@ -17,9 +17,19 @@ class KubeResource
     api_client.body(resource).post
   end
 
-  def delete(name)
-    @api_client.route(name).delete
+  def replace(name, resource)
+    api_client.route(name).body(resource).put
   end
 
+  def delete(name)
+    api_client.route(name).delete
+  end
 
+  def create_or_replace(name, resource)
+    if get(name).success?
+      replace(name, resource)
+    else
+      create(resource)
+    end
+  end
 end

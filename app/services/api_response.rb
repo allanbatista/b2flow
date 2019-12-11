@@ -8,6 +8,6 @@ class ApiResponse
   end
 
   def success?
-    response.status <= 200
+    @response.status <= 200
   end
 end
