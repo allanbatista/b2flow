@@ -9,6 +9,10 @@ default: &default
   B2FLOW__STORAGE__S3__REGION: ""
   B2FLOW__STORAGE__S3__BUCKET: ""
   B2FLOW__STORAGE__S3__PREFIX: ""
+  B2FLOW__KUBERNETES__URI: http://localhost:8080/api
+  B2FLOW__KUBERNETES__VERSION: v1
+  B2FLOW__KUBERNETES__USERNAME: admin
+  B2FLOW__KUBERNETES__PASSWORD: password
 test:
   <<: *default
   B2FLOW__DATABASE__URI: mongodb://mongo:password@localhost:27017/b2flow_test?authSource=admin

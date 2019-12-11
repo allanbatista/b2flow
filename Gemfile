@@ -58,3 +58,5 @@ gem "aws-sdk-s3", require: false
 gem 'mongoid'
 gem 'mongoid-paperclip'
 gem 'kaminari-mongoid'
+gem 'faraday'
+gem 'recursive-open-struct'
