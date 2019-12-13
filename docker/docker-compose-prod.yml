@@ -6,6 +6,7 @@ volumes:
 services:
   database:
     image: mongo:4
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: password
@@ -23,7 +24,6 @@ services:
     links:
       - database
     depends_on:
-      - b2flow
       - database
     environment:
       RAILS_ENV: development

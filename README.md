@@ -2,6 +2,13 @@
 
 É uma ferramenta para automatizar jobs de forma simples e transparente.
 
+### Deploy
+
+```
+wget https://raw.githubusercontent.com/allanbatista/b2flow/master/docker/docker-compose-prod.yml -O docker-compose.yml
+docker-compose -f docker-compose.yml up -d --force-recreate
+```
+
 ### Configurações
 
 **Banco de Dados**
