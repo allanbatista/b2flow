@@ -17,6 +17,24 @@ O único banco de dados suportado é o mongo.
 
     B2FLOW__DATABASE__URI=mongodb://mongo:password@localhost:27017/b2flow_test?authSource=admin
 
+**Kubernetes**
+
+    B2FLOW__KUBERNETES__URI: http://localhost:8080/api
+    B2FLOW__KUBERNETES__VERSION: v1
+    B2FLOW__KUBERNETES__USERNAME: admin
+    B2FLOW__KUBERNETES__PASSWORD: password
+
+**Storate**
+
+O storage da suporte tanto para o S3 quando para o GCS com interoperabilidade 
+
+      B2FLOW__STORAGE__TYPE: S3 | GCS
+      B2FLOW__STORAGE__ACCESS_KEY_ID: ""
+      B2FLOW__STORAGE__SECRET_KEY_ID: ""
+      B2FLOW__STORAGE__REGION: ""
+      B2FLOW__STORAGE__BUCKET: ""
+      B2FLOW__STORAGE__PREFIX: ""
+
 ### API
 
 Para fazer qualquer interação com a API interna, é necessário ter um token
@@ -233,22 +251,4 @@ status: 200
     "created_at": "2019-12-02T19:05:27.260+0000",
     "updated_at": "2019-12-02T19:06:56.263+0000"
 }
-```
-
-
-## Start Project
-
-Para iniciar localmente basta utilizar o `docker-compose up` para subir em modo de teste.
-
-### Iniciando manualmente
-
-```bash
-# build b2flow base image
-docker build -t b2flow-base -f docker/Dockefile-base .
-
-# build b2flow image
-docker build -t b2flow -f docker/Dockefile-base .
-
-# iniciando o webapp
-docker run --rm -it -p 3000:3000 b2flow webapp
 ```
