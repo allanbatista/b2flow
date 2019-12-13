@@ -114,6 +114,6 @@ Rails.application.configure do
     }
 
     paperclip_defaults[:s3_host_name] = 'storage.googleapis.com' if AppConfig.B2FLOW__STORAGE__TYPE.upcase == "GCS"
-    paperclip_defaults[:s3_host_name] = AppConfig.AWS__HOST__NAME if AppConfig.AWS__HOST__NAME.present?
+    paperclip_defaults[:s3_host_name] = AppConfig.B2FLOW__STORAGE__HOST_NAME if AppConfig.B2FLOW__STORAGE__HOST_NAME.present?
   end
 end
