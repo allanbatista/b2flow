@@ -1,4 +1,4 @@
-FROM b2flow-base
+FROM allanbatista/b2flow-base
 
 LABEL author="Allan Batista <allan@allanbatista.com.br>"
 
