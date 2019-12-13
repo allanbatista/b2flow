@@ -21,9 +21,21 @@ RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
     locale-gen en_US.UTF-8
 
-COPY Gemfile /tmp
-COPY Gemfile.lock /tmp
+# expose
+EXPOSE 3000
+
+# define default app location
+ENV HOME_APP=/opt/app
+RUN mkdir -p ${HOME_APP}
+COPY . ${HOME_APP}
+WORKDIR ${HOME_APP}
+
+VOLUME ${HOME_APP}/storage
 
 # install dependencies and build
-RUN cd /tmp && \
-    bundle install
+RUN bundle install
+
+# start up project
+RUN chmod +x entrypoint.sh
+ENTRYPOINT [ "/opt/app/entrypoint.sh" ]
+CMD ["b2flow-api"]
