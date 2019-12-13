@@ -62,4 +62,20 @@ Rails.application.configure do
   # config.logger = Logist::Logger.new(STDOUT)
   #
   config.log_level = AppConfig.B2FLOW__LOGLEVEL
+
+  if ['GCS', 'S3'].include?(AppConfig.B2FLOW__STORAGE__TYPE)
+    paperclip_defaults = {
+        :storage => :s3,
+        :s3_credentials => {
+            :access_key_id => AppConfig.B2FLOW__STORAGE__ACCESS_KEY_ID,
+            :secret_access_key => AppConfig.B2FLOW__STORAGE__SECRET_KEY_ID,
+            :s3_region => AppConfig.B2FLOW__STORAGE__REGION
+        },
+        :bucket => AppConfig.B2FLOW__STORAGE__BUCKET,
+        :path => [AppConfig.B2FLOW__STORAGE__PREFIX, ':attachment/:id/:style.:extension'].compact.join("/")
+    }
+
+    paperclip_defaults[:s3_host_name] = 'storage.googleapis.com' if AppConfig.B2FLOW__STORAGE__TYPE.upcase == "GCS"
+    paperclip_defaults[:s3_host_name] = AppConfig.B2FLOW__STORAGE__HOST_NAME if AppConfig.B2FLOW__STORAGE__HOST_NAME.present?
+  end
 end
