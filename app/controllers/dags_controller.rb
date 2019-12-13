@@ -30,8 +30,13 @@ class DagsController < AuthenticatedController
 
   # PATCH/PUT /dags/1
   def update
-    @dag.source = StringIO.new(Base64.decode64(params[:source])) if params[:source]
     if @dag.update(dag_params_update)
+      if params[:source]
+        @dag.source = StringIO.new(Base64.decode64(params[:source]))
+        @dag.save
+      end
+
+
       render json: @dag.to_api
     else
       render json: @dag.errors, status: :unprocessable_entity

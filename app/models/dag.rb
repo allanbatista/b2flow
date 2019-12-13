@@ -16,7 +16,7 @@ class Dag
   validates_attachment :source, content_type: { content_type: 'application/zip' }
   validates :name, presence: true, uniqueness: { scope: [:team_id, :project_id] }
   validates :enable, presence: true
-  validates :cron, allow_blank: true, format: { with: /\A((\*|\d+((\/|\-){0,1}(\d+))*)\s*){5}\z/ }
+  # validates :cron, allow_blank: true, format: { with: /\A((\*|\d+((\/|\-){0,1}(\d+))*)\s*){5}\Z/ }
 
   after_save :integrate_kubernetes
 
@@ -53,6 +53,20 @@ class Dag
                   {
                     "name": "master",
                     "image": "debian:stable-slim",
+                    "env": [
+                      { "name": "B2FLOW__DAG__CONFIG", "value": config.to_json },
+                      { "name": "B2FLOW__STORAGE_PATH", "value": source.path },
+                      { "name": "B2FLOW__STORAGE__TYPE", "value": AppConfig.B2FLOW__STORAGE__TYPE},
+                      { "name": "B2FLOW__STORAGE__S3__ACCESS_KEY_ID", "value": AppConfig.B2FLOW__STORAGE__S3__ACCESS_KEY_ID },
+                      { "name": "B2FLOW__STORAGE__S3__SECRET_KEY_ID", "value": AppConfig.B2FLOW__STORAGE__S3__SECRET_KEY_ID },
+                      { "name": "B2FLOW__STORAGE__S3__REGION", "value": AppConfig.B2FLOW__STORAGE__S3__REGION },
+                      { "name": "B2FLOW__STORAGE__S3__BUCKET", "value": AppConfig.B2FLOW__STORAGE__S3__BUCKET },
+                      { "name": "B2FLOW__STORAGE__S3__PREFIX", "value": AppConfig.B2FLOW__STORAGE__S3__PREFIX },
+                      { "name": "B2FLOW__KUBERNETES__URI", "value": AppConfig.B2FLOW__KUBERNETES__URI },
+                      { "name": "B2FLOW__KUBERNETES__VERSION", "value": AppConfig.B2FLOW__KUBERNETES__VERSION },
+                      { "name": "B2FLOW__KUBERNETES__USERNAME", "value": AppConfig.B2FLOW__KUBERNETES__USERNAME },
+                      { "name": "B2FLOW__KUBERNETES__PASSWORD", "value": AppConfig.B2FLOW__KUBERNETES__PASSWORD }
+                    ],
                     "args": [
                         "/bin/sh",
                         "-c",

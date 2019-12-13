@@ -64,7 +64,7 @@ RSpec.describe "Dags", type: :request do
     it "should create a new dag" do
       params = {
           name: "new-dag",
-          cron: '1 1 * * *',
+          cron: '*/1 1 * * *',
           enable: true,
           # source: Rack::Test::UploadedFile.new(fixtures_path('dags/source.zip')),
           source: Base64.encode64(File.read(fixtures_path('dags/source.zip'))),
