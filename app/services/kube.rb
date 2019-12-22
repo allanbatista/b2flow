@@ -4,7 +4,10 @@ class Kube
 
   def initialize
     @connection = Faraday.new(AppConfig.B2FLOW__KUBERNETES__URI, {ssl: { verify: false }, headers: { 'content-type': 'application/json' }} )
-    @connection.basic_auth(AppConfig.B2FLOW__KUBERNETES__USERNAME, AppConfig.B2FLOW__KUBERNETES__PASSWORD)
+
+    if AppConfig.B2FLOW__KUBERNETES__USERNAME.present? and AppConfig.B2FLOW__KUBERNETES__PASSWORD.present?
+      @connection.basic_auth(AppConfig.B2FLOW__KUBERNETES__USERNAME, AppConfig.B2FLOW__KUBERNETES__PASSWORD)
+    end
   end
 
   class << self

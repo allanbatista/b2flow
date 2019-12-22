@@ -52,10 +52,10 @@ class Dag
                 "containers": [
                   {
                     "name": "master",
-                    "image": "debian:stable-slim",
+                    "image": "allanbatista/b2flow-manager",
                     "env": [
                       { "name": "B2FLOW__DAG__CONFIG", "value": config.to_json },
-                      { "name": "B2FLOW__STORAGE_PATH", "value": source.path },
+                      { "name": "B2FLOW__STORAGE__PATH", "value": source.path },
                       { "name": "B2FLOW__STORAGE__TYPE", "value": AppConfig.B2FLOW__STORAGE__TYPE},
                       { "name": "B2FLOW__STORAGE__HOST_NAME", "value": AppConfig.B2FLOW__STORAGE__HOST_NAME },
                       { "name": "B2FLOW__STORAGE__ACCESS_KEY_ID", "value": AppConfig.B2FLOW__STORAGE__ACCESS_KEY_ID },
@@ -67,11 +67,6 @@ class Dag
                       { "name": "B2FLOW__KUBERNETES__VERSION", "value": AppConfig.B2FLOW__KUBERNETES__VERSION },
                       { "name": "B2FLOW__KUBERNETES__USERNAME", "value": AppConfig.B2FLOW__KUBERNETES__USERNAME },
                       { "name": "B2FLOW__KUBERNETES__PASSWORD", "value": AppConfig.B2FLOW__KUBERNETES__PASSWORD }
-                    ],
-                    "args": [
-                        "/bin/sh",
-                        "-c",
-                        "date; echo Hello from the Kubernetes cluster"
                     ]
                   }
                 ],

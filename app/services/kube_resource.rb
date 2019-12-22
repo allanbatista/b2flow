@@ -9,7 +9,7 @@ class KubeResource
     api_client.get
   end
 
-  def get(name)
+  def find(name)
     api_client.route(name).get
   end
 
@@ -26,7 +26,7 @@ class KubeResource
   end
 
   def create_or_replace(name, resource)
-    if get(name).success?
+    if find(name).success?
       replace(name, resource)
     else
       create(resource)
