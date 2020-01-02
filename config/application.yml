@@ -1,5 +1,7 @@
 ---
 default: &default
+  B2FLOW__BASE__PROTOCOL: http
+  B2FLOW__BASE__DOMAIN: localhost:3000
   B2FLOW__TOKEN_SECRET: oUyCzW5GnSs9p4g2CdBQHX4kK1lXZKNMAetaRQftibwYClWx8q5SHRkW1MNbACr707ag1m7RxdQvgPdyYS9GtM5otJ9mDURRjghvIzhk9KGLU6rLHT1wZC152K0F7EcUdslhV7hFn4mfH90yhi4fClR0vMWknH9Q0MQBlbLhOwaOScHYNCHFWa35ZujOaxRMple9FUCLqJc5xzX6GnDQGyrTcDH6aYro7rYn89Nyf8hepe2WThRLzIQLNbEtS5f3
   B2FLOW__DATABASE__URI: ""
   B2FLOW__LOGLEVEL: info
@@ -14,11 +16,14 @@ default: &default
   B2FLOW__KUBERNETES__VERSION: v1
   B2FLOW__KUBERNETES__USERNAME: admin
   B2FLOW__KUBERNETES__PASSWORD: password
+  B2FLOW__SIDEKIQ__REDIS_URL: redis://localhost:6379/0
+  B2FLOW__REGISTRY__GCP__KEYFILE: ""
 test:
   <<: *default
   B2FLOW__DATABASE__URI: mongodb://mongo:password@localhost:27017/b2flow_test?authSource=admin
   B2FLOW__STORAGE__TYPE: test
   B2FLOW__BROAKER__BATCH_SIZE: 1
+  B2FLOW__SIDEKIQ__REDIS_URL: redis://localhost:6379/1
 development:
   <<: *default
   B2FLOW__DATABASE__URI: mongodb://mongo:password@localhost:27017/b2flow_development?authSource=admin

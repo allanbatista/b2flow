@@ -2,9 +2,10 @@ version: "3.5"
 
 volumes:
   mongo-db:
+  redis-db:
 
 services:
-  database:
+  mongodb:
     image: mongo:4
     restart: unless-stopped
     environment:
@@ -15,15 +16,25 @@ services:
     volumes:
       - mongo-db:/data/db
 
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-db:/data
+
   webapp:
     image: allanbatista/b2flow
     restart: unless-stopped
     ports:
       - 80:3000
     links:
-      - database
+      - mongodb
+      - redis
     depends_on:
-      - database
+      - mongodb
+      - redis
     environment:
       RAILS_ENV: development
       B2FLOW__TOKEN_SECRET: abc123
@@ -39,3 +50,4 @@ services:
       B2FLOW__STORAGE__REGION: ""
       B2FLOW__STORAGE__BUCKET: ""
       B2FLOW__STORAGE__PREFIX: ""
+      B2FLOW__SIDEKIQ__REDIS_URL: redis://redis:6379/0

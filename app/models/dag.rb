@@ -6,6 +6,8 @@ class Dag
   belongs_to :team
   belongs_to :project
 
+  has_many :jobs
+
   field :name, type: String
   field :cron, type: String
   field :config, type: Hash, default: {}
@@ -16,9 +18,8 @@ class Dag
   validates_attachment :source, content_type: { content_type: 'application/zip' }
   validates :name, presence: true, uniqueness: { scope: [:team_id, :project_id] }
   validates :enable, presence: true
-  # validates :cron, allow_blank: true, format: { with: /\A((\*|\d+((\/|\-){0,1}(\d+))*)\s*){5}\Z/ }
 
-  after_save :integrate_kubernetes
+  after_save -> { DagWorker.perform_async(self.id.to_s) }
 
   def to_api
     as_json(only: [:_id, :name, :enable, :cron, :config, :team_id, :project_id], methods: [:source_url])
@@ -29,59 +30,20 @@ class Dag
   end
 
   def full_name
-    "#{team.name}-#{project.name}-#{name}"
+    "#{team.name}_#{project.name}_#{name}"
   end
 
-  def integrate_kubernetes
-    cronjob = {
-      "apiVersion": "batch/v1beta1",
-      "kind": "CronJob",
-      "metadata": {
-        "name": full_name
-      },
-      "spec": {
-        "schedule": cron,
-        "suspend": !enable,
-        "successfulJobsHistoryLimit": 10,
-        "failedJobsHistoryLimit": 10,
-        "concurrencyPolicy": "Forbid",
-        "jobTemplate": {
-          "spec": {
-            "template": {
-              "spec": {
-                "containers": [
-                  {
-                    "name": "master",
-                    "image": "allanbatista/b2flow-manager",
-                    "env": [
-                      { "name": "B2FLOW__DAG__CONFIG", "value": config.to_json },
-                      { "name": "B2FLOW__STORAGE__PATH", "value": source.path },
-                      { "name": "B2FLOW__STORAGE__TYPE", "value": AppConfig.B2FLOW__STORAGE__TYPE},
-                      { "name": "B2FLOW__STORAGE__HOST_NAME", "value": AppConfig.B2FLOW__STORAGE__HOST_NAME },
-                      { "name": "B2FLOW__STORAGE__ACCESS_KEY_ID", "value": AppConfig.B2FLOW__STORAGE__ACCESS_KEY_ID },
-                      { "name": "B2FLOW__STORAGE__SECRET_KEY_ID", "value": AppConfig.B2FLOW__STORAGE__SECRET_KEY_ID },
-                      { "name": "B2FLOW__STORAGE__REGION", "value": AppConfig.B2FLOW__STORAGE__REGION },
-                      { "name": "B2FLOW__STORAGE__BUCKET", "value": AppConfig.B2FLOW__STORAGE__BUCKET },
-                      { "name": "B2FLOW__STORAGE__PREFIX", "value": AppConfig.B2FLOW__STORAGE__PREFIX },
-                      { "name": "B2FLOW__KUBERNETES__URI", "value": AppConfig.B2FLOW__KUBERNETES__URI },
-                      { "name": "B2FLOW__KUBERNETES__VERSION", "value": AppConfig.B2FLOW__KUBERNETES__VERSION },
-                      { "name": "B2FLOW__KUBERNETES__USERNAME", "value": AppConfig.B2FLOW__KUBERNETES__USERNAME },
-                      { "name": "B2FLOW__KUBERNETES__PASSWORD", "value": AppConfig.B2FLOW__KUBERNETES__PASSWORD }
-                    ]
-                  }
-                ],
-                "restartPolicy": "OnFailure"
-              }
-            }
-          }
-        }
-      }
-    }
+  def publish
+    DagPublishWorker.perform_async(self.id.to_s) if enable and crontab.present?
+  end
 
-    if cron.present?
-      Kube.cronjobs.create_or_replace(full_name, cronjob)
-    else
-      Kube.cronjobs.delete(full_name) if Kube.cronjobs.find(full_name).success?
-    end
+  def as_config
+    {
+        name: name,
+        config: team.config.merge(project.config).merge(config),
+        team: team.name,
+        project: project.name,
+        jobs: jobs.map(&:as_config)
+    }
   end
 end

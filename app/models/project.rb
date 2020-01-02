@@ -6,6 +6,7 @@ class Project
   has_many :dags
 
   field :name, type: String
+  field :config, type: Hash, default: {}
 
   validates :name, presence: true, uniqueness: { scope: [:team_id] }
   validates :team, presence: true

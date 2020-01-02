@@ -51,7 +51,6 @@ gem 'jwt'
 # gem 'activestorage-validator'
 gem 'kaminari'
 gem 'parse-cron'
-gem "bunny"
 gem 'logist'
 
 gem "aws-sdk-s3", require: false
@@ -60,3 +59,5 @@ gem 'mongoid-paperclip'
 gem 'kaminari-mongoid'
 gem 'faraday'
 gem 'recursive-open-struct'
+gem 'sidekiq'
+gem 'rubyzip'
