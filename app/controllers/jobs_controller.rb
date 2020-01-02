@@ -7,14 +7,12 @@ class DagsController < AuthenticatedController
   def build_callback
     if params['success']
       @job.ready!
-
-      if @dag.ready?
-        @dag.publish
-      end
+      @dag.publish if @dag.ready?
     end
   end
 
   private
+
   def set_team
     @team = Team.find_by(name: params[:team_name])
   end

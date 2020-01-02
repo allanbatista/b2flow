@@ -1,18 +1,10 @@
-require 'zip'
-
 class DagPublisherWorker
   include Sidekiq::Worker
   sidekiq_options queue: 'dags_publisher'
 
   def perform(dag_id)
     dag = Dag.find(dag_id)
-    config = create_config(dag)
-
-    if dag.cron.present? and dag.enable
-      Kube.cronjobs.create_or_replace(dag.full_name, config)
-    else
-      Kube.cronjobs.delete(dag.full_name) if Kube.cronjobs.find(dag.full_name).success?
-    end
+    Kube.cronjobs.create_or_replace(dag.full_name, create_config(dag))
   end
 
   def create_config(dag)

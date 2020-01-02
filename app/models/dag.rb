@@ -19,7 +19,9 @@ class Dag
   validates :name, presence: true, uniqueness: { scope: [:team_id, :project_id] }
   validates :enable, presence: true
 
-  after_save -> { DagWorker.perform_async(self.id.to_s) }
+  after_save do
+    DagWorker.perform_async(self.id.to_s) if changed? and enable
+  end
 
   def to_api
     as_json(only: [:_id, :name, :enable, :cron, :config, :team_id, :project_id], methods: [:source_url])
@@ -34,7 +36,11 @@ class Dag
   end
 
   def publish
-    DagPublishWorker.perform_async(self.id.to_s) if enable and crontab.present?
+    DagPublisherWorker.perform_async(self.id.to_s)
+  end
+
+  def unpublish
+    DagUnpublisherWorker.perform_async(self.id.to_s)
   end
 
   def as_config
@@ -45,5 +51,9 @@ class Dag
         project: project.name,
         jobs: jobs.map(&:as_config)
     }
+  end
+
+  def ready?
+    jobs.map(&:ready).all?
   end
 end

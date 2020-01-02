@@ -36,7 +36,7 @@ class DagsController < AuthenticatedController
         @dag.save
       end
 
-      render json: @dag.to_api
+      render json: @dag.to_api, status: 200
     else
       render json: @dag.errors, status: :unprocessable_entity
     end
