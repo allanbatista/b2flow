@@ -37,7 +37,8 @@ class Job
       depends: depends,
       full_name: full_name,
       version: version,
-      engine: engine.as_config
+      engine: engine.as_config,
+      image: "gcr.io/#{AppConfig.B2FLOW__GOOGLE__PROJECT_ID}/#{full_name}:#{version}"
     }
   end
 end

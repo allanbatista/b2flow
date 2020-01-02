@@ -46,6 +46,7 @@ class Dag
   def as_config
     {
         name: name,
+        full_name: full_name,
         config: team.config.merge(project.config).merge(config),
         team: team.name,
         project: project.name,

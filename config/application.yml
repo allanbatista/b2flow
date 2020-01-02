@@ -18,6 +18,7 @@ default: &default
   B2FLOW__KUBERNETES__PASSWORD: password
   B2FLOW__SIDEKIQ__REDIS_URL: redis://localhost:6379/0
   B2FLOW__REGISTRY__GCP__KEYFILE: ""
+  B2FLOW__GOOGLE__PROJECT_ID: ""
 test:
   <<: *default
   B2FLOW__DATABASE__URI: mongodb://mongo:password@localhost:27017/b2flow_test?authSource=admin

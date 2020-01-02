@@ -33,7 +33,8 @@ class JobBuilderWorker
                                 {"name": "B2FLOW__STORAGE__S3__BUCKET", "value": AppConfig.B2FLOW__STORAGE__BUCKET },
                                 {"name": "B2FLOW__STORAGE__URI", "value": job.dag.source.url },
                                 {"name": "B2FLOW__REGISTRY__GCP__KEYFILE", "value": AppConfig.B2FLOW__REGISTRY__GCP__KEYFILE },
-                                {"name": "B2FLOW__BUILDER__CALLBACK__URI", "value": build_callback_uri(job) }
+                                {"name": "B2FLOW__BUILDER__CALLBACK__URI", "value": build_callback_uri(job) },
+                                {"name": "B2FLOW__GOOGLE__PROJECT_ID", "value": AppConfig.B2FLOW__GOOGLE__PROJECT_ID }
                             ]
                         }
                     ]
