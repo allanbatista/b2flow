@@ -32,7 +32,7 @@ class DagsController < AuthenticatedController
   def update
     if @dag.update(dag_params_update)
       if params[:source]
-        @dag.source = StringIO.new(Base64.decode64(params[:source]))
+        @dag.source = FileIo.new("source.zip", Base64.decode64(params[:source]))
         @dag.save
       end
 
@@ -70,10 +70,10 @@ class DagsController < AuthenticatedController
 
     # Only allow a trusted parameter "white list" through.
     def dag_params
-      params.permit(:name, :cron, :enable, :config => {})
+      params.permit(:name, :cron, :enable, :environments => {})
     end
 
     def dag_params_update
-      params.permit(:cron, :enable, :config => {})
+      params.permit(:cron, :enable, :environments => {})
     end
 end

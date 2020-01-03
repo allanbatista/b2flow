@@ -2,7 +2,7 @@ require 'zip'
 
 class DagWorker
   include Sidekiq::Worker
-  sidekiq_options queue: 'dags'
+  sidekiq_options queue: 'default'
 
   def perform(dag_id)
     dag = Dag.find(dag_id)

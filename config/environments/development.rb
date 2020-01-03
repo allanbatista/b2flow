@@ -63,19 +63,29 @@ Rails.application.configure do
   #
   config.log_level = AppConfig.B2FLOW__LOGLEVEL
 
-  if ['GCS', 'S3'].include?(AppConfig.B2FLOW__STORAGE__TYPE)
-    paperclip_defaults = {
+  if AppConfig.B2FLOW__STORAGE__TYPE == 'GCS'
+    config.paperclip_defaults = {
+        storage: :fog,
+        fog_credentials: {
+            provider: "Google",
+            google_project: AppConfig.B2FLOW__GOOGLE__PROJECT_ID,
+            google_json_key_string: Base64.decode64(AppConfig.B2FLOW__REGISTRY__GCP__KEYFILE)
+        }
+    }
+  end
+
+  if AppConfig.B2FLOW__STORAGE__TYPE == 'S3'
+    paperclip_hostname = AppConfig.B2FLOW__STORAGE__HOST_NAME if AppConfig.B2FLOW__STORAGE__HOST_NAME.present?
+
+    config.paperclip_defaults = {
         :storage => :s3,
+        :s3_host_name => paperclip_hostname,
         :s3_credentials => {
             :access_key_id => AppConfig.B2FLOW__STORAGE__ACCESS_KEY_ID,
             :secret_access_key => AppConfig.B2FLOW__STORAGE__SECRET_KEY_ID,
             :s3_region => AppConfig.B2FLOW__STORAGE__REGION
         },
-        :bucket => AppConfig.B2FLOW__STORAGE__BUCKET,
-        :path => [AppConfig.B2FLOW__STORAGE__PREFIX, ':attachment/:id/:style.:extension'].compact.join("/")
+        :bucket => AppConfig.B2FLOW__STORAGE__BUCKET
     }
-
-    paperclip_defaults[:s3_host_name] = 'storage.googleapis.com' if AppConfig.B2FLOW__STORAGE__TYPE.upcase == "GCS"
-    paperclip_defaults[:s3_host_name] = AppConfig.B2FLOW__STORAGE__HOST_NAME if AppConfig.B2FLOW__STORAGE__HOST_NAME.present?
   end
 end

@@ -7,10 +7,10 @@ class Dag
   belongs_to :project
 
   has_many :jobs
+  has_many :environments, class_name: "DagEnvironment"
 
   field :name, type: String
   field :cron, type: String
-  field :config, type: Hash, default: {}
   field :enable, type: Boolean, default: false
 
   has_mongoid_attached_file :source
@@ -24,15 +24,39 @@ class Dag
   end
 
   def to_api
-    as_json(only: [:_id, :name, :enable, :cron, :config, :team_id, :project_id], methods: [:source_url])
+    as_json(only: [:_id, :name, :enable, :cron, :team_id, :project_id], methods: [:source_url, :ready])
+  end
+
+  def complete_environments
+    envs = {}
+
+    project.complete_environments.each do |env|
+      envs[env.name] = env
+    end
+
+    environments.each do |env|
+      envs[env.name] = env
+    end
+
+    envs.values
   end
 
   def source_url
     source.url
   end
 
+  def storage_path
+    if AppConfig.B2FLOW__STORAGE__TYPE == 'GCS'
+      "gs://#{AppConfig.B2FLOW__STORAGE__BUCKET}/#{source.path}"
+    elsif AppConfig.B2FLOW__STORAGE__TYPE == 'S3'
+      "g3://#{AppConfig.B2FLOW__STORAGE__BUCKET}/#{source.path}"
+    else
+      source.path
+    end
+  end
+
   def full_name
-    "#{team.name}_#{project.name}_#{name}"
+    "#{team.name}-#{project.name}-#{name}"
   end
 
   def publish
@@ -47,14 +71,13 @@ class Dag
     {
         name: name,
         full_name: full_name,
-        config: team.config.merge(project.config).merge(config),
         team: team.name,
         project: project.name,
         jobs: jobs.map(&:as_config)
     }
   end
 
-  def ready?
+  def ready
     jobs.map(&:ready).all?
   end
 end

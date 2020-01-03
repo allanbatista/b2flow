@@ -1,14 +1,33 @@
-class JobsController < ApplicationController
+class DagEnvironmentsController < ApplicationController
   before_action :set_team, :ensure_team
   before_action :set_project, :ensure_project
   before_action :set_dag, :ensure_dag
-  before_action :set_job, :ensure_dag
 
-  def build_callback
-    if params['success']
-      @job.ready!
-      @dag.publish if @dag.ready
+  def index
+    if params[:complete] == "true"
+      render json: @dag.complete_environments.map(&:to_api)
+    else
+      render json: @dag.environments.map(&:to_api)
     end
+  end
+
+  def update
+    env = @dag.environments.find_or_initialize_by(name: params[:env_name])
+
+    env.value = params[:value].to_s unless params[:value].nil?
+    env.secret = params[:secret] unless params[:secret].nil?
+
+    if env.save
+        render json: env.to_api, status: 200
+    else
+      render json: env.errors, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @dag.environments.find_by(name: params[:env_name]).try(:destroy!)
+
+    render :nothing => true, status: 204
   end
 
   private
@@ -41,19 +60,5 @@ class JobsController < ApplicationController
     unless @dag.present?
       return render json: { message: "dag with name \"#{params[:dag_name]}\" was not found. dag is required" }, status: 422
     end
-  end
-
-  def set_job
-    @job = @dag.jobs.find_by(name: params[:job_name])
-  end
-
-  def ensure_dag
-    unless @job.present?
-      return render json: { message: "job with name \"#{params[:job_name]}\" was not found. job is required" }, status: 422
-    end
-  end
-
-  def callback_params
-
   end
 end

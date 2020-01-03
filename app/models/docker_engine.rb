@@ -1,12 +1,8 @@
 class DockerEngine < Engine
-  field :cpu, type: Integer, default: 1
-  field :memory, type: Integer, default: 4096
+  field :flavor, type: String, default: 'standard-1'
 
   def self.build(config)
-    o = {
-        'cpu' => 1,
-        'memory' => 4096
-    }.merge(config)
-    DockerEngine.new(cpu: o['cpu'].to_i, memory: o['memory'].to_i)
+    o = { 'flavor' => 'standard-1' }.merge(config)
+    DockerEngine.new(flavor: o['flavor'])
   end
 end

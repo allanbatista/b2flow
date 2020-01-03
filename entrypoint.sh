@@ -2,8 +2,7 @@
 
 case $1 in
   "b2flow-api")
-    rake db:create
-    rake db:migrate
+    rake db:mongoid:create_indexes
     rails s
     ;;
   *)

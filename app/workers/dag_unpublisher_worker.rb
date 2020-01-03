@@ -1,6 +1,6 @@
 class DagUnpublisherWorker
   include Sidekiq::Worker
-  sidekiq_options queue: 'dags_unpublisher'
+  sidekiq_options queue: 'default'
 
   def perform(dag_id)
     dag = Dag.find(dag_id)

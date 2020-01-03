@@ -1,13 +1,29 @@
 class ApiResponse
-  def initialize(response)
-    @response = response
-  end
+  attr_reader :response, :result, :request
 
-  def result
-    @result ||= RecursiveOpenStruct.new(JSON.parse(@response.body), recurse_over_arrays: true)
+  def initialize(response, request)
+    @request = request
+    @response = response
+    @result = RecursiveOpenStruct.new(JSON.parse(@response.body), recurse_over_arrays: true) rescue @response.body
+    @success = @response.status < 300
   end
 
   def success?
-    @response.status <= 200
+    @success
+  end
+
+  def to_s
+    message = ["status: #{response.status}"]
+    message += response.headers.map {|k, v| "#{k}: #{v}" }
+    if body_json?
+      message << "\n" + JSON.pretty_generate(@result.to_h)
+    else
+      message << "\n" + @result
+    end
+    message.join("\n")
+  end
+
+  def body_json?
+    @result.is_a?(RecursiveOpenStruct)
   end
 end

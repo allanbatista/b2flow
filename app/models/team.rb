@@ -3,9 +3,9 @@ class Team
   include Mongoid::Timestamps
 
   has_many :projects
+  has_many :environments, class_name: "TeamEnvironment"
 
   field :name, type: String
-  field :config, type: Hash, default: {}
 
   validates :name, presence: true, uniqueness: true
 

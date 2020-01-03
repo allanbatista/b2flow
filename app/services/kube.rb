@@ -1,13 +1,15 @@
 class Kube
   include Singleton
-  attr_reader :connection
+  attr_reader :connection, :client
 
   def initialize
-    @connection = Faraday.new(AppConfig.B2FLOW__KUBERNETES__URI, {ssl: { verify: false }, headers: { 'content-type': 'application/json' }} )
+    @connection = Faraday.new(AppConfig.B2FLOW__KUBERNETES__URI, {ssl: {verify: false }, headers: {'content-type': 'application/json' }} )
 
     if AppConfig.B2FLOW__KUBERNETES__USERNAME.present? and AppConfig.B2FLOW__KUBERNETES__PASSWORD.present?
       @connection.basic_auth(AppConfig.B2FLOW__KUBERNETES__USERNAME, AppConfig.B2FLOW__KUBERNETES__PASSWORD)
     end
+
+    @client = ApiClient.new(@connection)
   end
 
   class << self
@@ -17,6 +19,10 @@ class Kube
 
     def pods
       self.instance.pods
+    end
+
+    def jobs
+      self.instance.jobs
     end
   end
 
@@ -28,10 +34,7 @@ class Kube
     @pods ||= KubeResource.new(client,"/api/v1", "default", "pods")
   end
 
-  private
-
-  def client
-    ApiSdl.new(connection)
+  def jobs
+    @jobs ||= KubeResource.new(client,"/apis/batch/v1", "default", "jobs")
   end
 end
-

@@ -9,6 +9,8 @@ wget https://raw.githubusercontent.com/allanbatista/b2flow/master/docker/docker-
 docker-compose -f docker-compose.yml up -d --force-recreate
 ```
 
+kubectl proxy --port=8080
+
 ### Configurações
 
 **Banco de Dados**
@@ -19,7 +21,7 @@ O único banco de dados suportado é o mongo.
 
 **Kubernetes**
 
-    B2FLOW__KUBERNETES__URI: http://localhost:8080/api
+    B2FLOW__KUBERNETES__URI: http://localhost:8080
     B2FLOW__KUBERNETES__VERSION: v1
     B2FLOW__KUBERNETES__USERNAME: admin
     B2FLOW__KUBERNETES__PASSWORD: password

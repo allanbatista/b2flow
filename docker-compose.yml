@@ -40,7 +40,7 @@ services:
       B2FLOW__TOKEN_SECRET: abc123
       B2FLOW__DATABASE__URI: mongodb://mongo:password@database:27017/b2flow?authSource=admin
       B2FLOW__LOGLEVEL: info
-      B2FLOW__KUBERNETES__URI: http://localhost:8080/api
+      B2FLOW__KUBERNETES__URI: http://localhost:8080
       B2FLOW__KUBERNETES__VERSION: v1
       B2FLOW__KUBERNETES__USERNAME: admin
       B2FLOW__KUBERNETES__PASSWORD: password

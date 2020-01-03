@@ -28,7 +28,7 @@ class Job
   end
 
   def full_name
-    "#{dag.team.name}_#{dag.project.name}_#{dag.name}_#{name}"
+    "#{dag.team.name}-#{dag.project.name}-#{dag.name}-#{name}"
   end
 
   def as_config

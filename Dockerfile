@@ -12,7 +12,7 @@ ENV SLUGIFY_USES_TEXT_UNIDECODE=yes
 
 # install dependencies
 RUN apt-get update && \
-    apt-get install locales apt-utils -y && \
+    apt-get install locales apt-utils libcurl4-openssl-dev -y && \
     apt-get clean
 
 # set default encode
@@ -33,7 +33,7 @@ WORKDIR ${HOME_APP}
 VOLUME ${HOME_APP}/storage
 
 # install dependencies and build
-RUN bundle install
+RUN bundle install --without development test
 
 # start up project
 RUN chmod +x entrypoint.sh
