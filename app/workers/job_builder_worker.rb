@@ -40,21 +40,6 @@ class JobBuilderWorker
                             }
                         }
                     },
-                    "volumes": [
-                       {
-                           "name": "dind-storage",
-                           "emptyDir": {}
-                       }
-                    ],
-                    "securityContext": {
-                        "privileged": true
-                    },
-                    "volumeMounts": [
-                        {
-                            "name": "dind-storage",
-                            "mountPath": "/var/lib/docker"
-                        }
-                    ],
                     "containers": [
                         {
                             "name": "executor-#{name}",
@@ -63,9 +48,12 @@ class JobBuilderWorker
                                "limits": { "cpu" => "1", "memory" => "5Gi" },
                                "requests": { "cpu" => "1", "memory" => "5Gi" }
                             },
+                            "securityContext": {
+                                "privileged": true
+                            },
                             "env": [
                                 {"name": "B2FLOW__DAG__JOB__NAME", "value": job.name.to_s },
-                                {"name": "B2FLOW__IMAGE__TAG", "value": job.version.to_s },
+                                {"name": "B2FLOW__IMAGE__TAG", "value": job.dag.version.to_s },
                                 {"name": "B2FLOW__IMAGE__NAME", "value": job.full_name },
                                 {"name": "B2FLOW__STORAGE__TYPE", "value": "gcs" },
                                 {"name": "B2FLOW__STORAGE__S3__ACCESS_KEY_ID", "value": AppConfig.B2FLOW__STORAGE__ACCESS_KEY_ID.to_s },

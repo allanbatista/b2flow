@@ -15,15 +15,32 @@ class DagPublisherWorker
             "name": dag.full_name
         },
         "spec": {
-            "schedule": cron,
-            "suspend": !enable,
-            "successfulJobsHistoryLimit": 10,
-            "failedJobsHistoryLimit": 10,
-            "concurrencyPolicy": "Forbid",
+            "schedule": dag.cron,
+            "suspend": !dag.enable,
             "jobTemplate": {
                 "spec": {
                     "template": {
                         "spec": {
+                            "restartPolicy": "Never",
+                            "affinity": {
+                                "nodeAffinity": {
+                                    "requiredDuringSchedulingIgnoredDuringExecution": {
+                                        "nodeSelectorTerms": [
+                                            {
+                                                "matchExpressions": [
+                                                    {
+                                                        "key": "flavor",
+                                                        "operator": "In",
+                                                        "values": [
+                                                            "standard-1"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
                             "containers": [
                                 {
                                     "name": "master",
@@ -35,8 +52,7 @@ class DagPublisherWorker
                                         { "name": "B2FLOW__KUBERNETES__PASSWORD", "value": AppConfig.B2FLOW__KUBERNETES__PASSWORD }
                                     ]
                                 }
-                            ],
-                            "restartPolicy": "Never"
+                            ]
                         }
                     }
                 }

@@ -17,6 +17,10 @@ class Environment
     }
   end
 
+  def as_config
+    { name: name,  value: value }
+  end
+
   def value_formated
     if secret
       return "*" * value.size if value.size <= 4

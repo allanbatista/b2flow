@@ -19,9 +19,11 @@ class DagsController < AuthenticatedController
     dag = Dag.new(dag_params)
     dag.project = @project
     dag.team = @team
-    dag.source = StringIO.new(Base64.decode64(params[:source])) if params[:source]
+    dag.version = Time.now.to_i
+    dag.source = FileIo.new("#{dag.version}.zip", Base64.decode64(params[:source])) if params[:source]
 
     if dag.save
+      DagWorker.perform_async(@dag.id.to_s)
       render json: dag.to_api, status: :created, location: dag_path(@team.name, @project.name, dag.name)
     else
       render json: dag.errors, status: :unprocessable_entity
@@ -32,8 +34,9 @@ class DagsController < AuthenticatedController
   def update
     if @dag.update(dag_params_update)
       if params[:source]
-        @dag.source = FileIo.new("source.zip", Base64.decode64(params[:source]))
-        @dag.save
+        @dag.version = Time.now.to_i
+        @dag.source = FileIo.new("#{@dag.version}.zip", Base64.decode64(params[:source]))
+        DagWorker.perform_async(@dag.id.to_s) if @dag.save
       end
 
       render json: @dag.to_api, status: 200

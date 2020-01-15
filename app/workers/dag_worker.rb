@@ -18,6 +18,7 @@ class DagWorker
       zip.each do |entry|
         if entry.name == "b2flow.yml"
           yaml = entry.get_input_stream.read
+          puts yaml
           break
         end
       end
@@ -33,7 +34,7 @@ class DagWorker
     jobs.keys.each do |key|
       job = dag.jobs.find_by(name: key) || dag.jobs.new(name: key)
       job.update_from_config(jobs[key])
-      job.save
+      JobBuilderWorker.perform_async(job.id.to_s) if job.save
     end
 
     dag.jobs.where(:name.nin => jobs.keys).map(&:delete)

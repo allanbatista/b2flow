@@ -8,20 +8,14 @@ class Job
   field :name, type: String
   field :description, type: String
   field :depends, type: Array, default: []
-  field :version, type: Integer
   field :ready, type: Boolean, default: false
 
-  before_save do
-    self.version = Time.now.to_i
-    self.ready = false
-  end
-  after_save -> { JobBuilderWorker.perform_async(self.id.to_s) }
-
   def ready!
-    self.ready = true
+    self.update(ready: true)
   end
 
   def update_from_config(config)
+    self.ready = false
     self.depends = Array.wrap(config['depends']).compact
     self.description = config['description']
     self.engine = Engine.build_engine(config['engine'])
@@ -36,9 +30,9 @@ class Job
       name: name,
       depends: depends,
       full_name: full_name,
-      version: version,
+      version: dag.version,
       engine: engine.as_config,
-      image: "gcr.io/#{AppConfig.B2FLOW__GOOGLE__PROJECT_ID}/#{full_name}:#{version}"
+      image: "gcr.io/#{AppConfig.B2FLOW__GOOGLE__PROJECT_ID}/#{full_name}:#{dag.version}"
     }
   end
 end

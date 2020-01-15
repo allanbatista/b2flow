@@ -12,6 +12,7 @@ class Dag
   field :name, type: String
   field :cron, type: String
   field :enable, type: Boolean, default: false
+  field :version, type: Integer
 
   has_mongoid_attached_file :source
 
@@ -19,12 +20,19 @@ class Dag
   validates :name, presence: true, uniqueness: { scope: [:team_id, :project_id] }
   validates :enable, presence: true
 
-  after_save do
-    DagWorker.perform_async(self.id.to_s) if changed? and enable
-  end
-
   def to_api
-    as_json(only: [:_id, :name, :enable, :cron, :team_id, :project_id], methods: [:source_url, :ready])
+    {
+      id: id.to_s,
+      name: name,
+      enable: enable,
+      cron: cron,
+      team: team.name,
+      project: project.name,
+      full_name: full_name,
+      version: version,
+      source_url: source_url,
+      ready: ready
+    }
   end
 
   def complete_environments
@@ -73,6 +81,8 @@ class Dag
         full_name: full_name,
         team: team.name,
         project: project.name,
+        version: version,
+        environments: environments.map(&:as_config),
         jobs: jobs.map(&:as_config)
     }
   end
